@@ -1,5 +1,5 @@
 /*
-Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+Copyright © 2019 Javin Forrester javinforrester@gmail.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 
-	"github.com/julienschmidt/httprouter"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/waikco/cats-v1/app"
+	"github.com/waikco/cats-v1/conf"
 )
 
 var cfgFile string
@@ -36,20 +35,19 @@ var rootCmd = &cobra.Command{
 	Short: "A sample restful API",
 	Long:  `Provides cat data through a restful API, backed by multiple storage systems`,
 	Run: func(cmd *cobra.Command, args []string) {
-		a := &app.App{}
+		var a app.App
+		var config conf.Config
 
-		router := httprouter.New()
+		viperInstance := viper.GetViper()
+		err := viperInstance.UnmarshalExact(&config)
+		if err != nil {
+			log.Panic().Msgf("error parsing config: %v", err)
+		}
+		a.Config = config
 
-		// add actual api routes
-		router.GET("/cats/v1/health", a.Health)
-		router.GET("/cats/v1/cats/:id", a.GetCat)
-		router.GET("/cats/v1/cats", a.GetCats)
-		//router.POST("/cats/v1/", a.CreateCat)
-		//router.POST("/cats/v1/bulkcatadd", a.MassCreateCat)
-		//router.PUT("/cats/v1/{id:[1-9][0-9]*|0}", a.UpdateCat)
-		//router.DELETE("/cats/v1/{id:[1-9][0-9]*|0}", a.DeleteCat)
+		a.Bootstrap()
+		a.Run()
 
-		log.Fatal(http.ListenAndServe(":8080", router))
 	},
 }
 
@@ -91,13 +89,14 @@ func initConfig() {
 
 		// Search config in home directory with name ".cats-v1" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".cats-v1")
+		viper.AddConfigPath("testing/")
+		viper.SetConfigName("config")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Info().Msgf("Using config file: %s", viper.ConfigFileUsed())
 	}
 }
