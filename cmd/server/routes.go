@@ -1,14 +1,13 @@
-package app
+package server
 
 import (
 	"database/sql"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
 	"github.com/rs/zerolog/log"
-
-	"github.com/waikco/cats-v1/model"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -27,18 +26,25 @@ func (a *App) Health(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 }
 
 func (a *App) CreateCat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var cat model.Cat
-	if err := json.NewDecoder(r.Body).Decode(&cat); err != nil {
-		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error marshalling json"})
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error reading body"})
+		log.Info().Msgf("error reading body: %v", err)
 		return
 	}
 
-	if id, err := a.Storage.Insert(cat); err != nil {
-		log.Info().Msgf("error storing cat %+v: %v", cat, err)
-		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error storing object"})
+	if !json.Valid(body) {
+		respondWithJson(w, http.StatusBadRequest, catResponse{Result: "invalid json in request body"})
+		log.Warn().Msgf("received invalid json in request body: %v", err)
+		return
+	}
+
+	if id, err := a.Storage.Insert(body); err != nil {
+		log.Info().Msgf("error storing cat %+v: %v", body, err)
+		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error storing cat"})
 		return
 	} else {
-		respondWithJson(w, http.StatusCreated, catResponse{ID: id})
+		respondWithJson(w, http.StatusCreated, catResponse{ID: id, Result: "success"})
 		return
 	}
 }
@@ -80,13 +86,14 @@ func (a *App) GetCats(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 }
 
 func (a *App) UpdateCat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var cat model.Cat
-	if err := json.NewDecoder(r.Body).Decode(&cat); err != nil {
-		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error marshalling json"})
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error reading body"})
+		log.Info().Msgf("error reading body: %v", err)
 		return
 	}
 
-	if err := a.Storage.Update(ps.ByName("id"), cat); err != nil {
+	if err := a.Storage.Update(ps.ByName("id"), body); err != nil {
 		respondWithJson(w, http.StatusInternalServerError, catResponse{Result: "error storing object"})
 		return
 	} else {
@@ -105,6 +112,6 @@ func (a *App) DeleteCat(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 }
 
-func (a *App) MassCreateCat(w http.ResponseWriter, r *http.Request) {
-	respondWithJson(w, http.StatusOK, catResponse{Result: "not implemented"})
-}
+//func (a *App) MassCreateCat(w http.ResponseWriter, r *http.Request) {
+//	respondWithJson(w, http.StatusOK, catResponse{Result: "not implemented"})
+//}

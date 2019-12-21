@@ -4,6 +4,8 @@ github.com/cespare/xxhash
 github.com/coocood/freecache
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
+# github.com/golang/mock v1.3.1
+github.com/golang/mock/gomock
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast

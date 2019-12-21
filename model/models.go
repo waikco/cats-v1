@@ -8,24 +8,26 @@ type Cat struct {
 }
 
 // GetCat retrieves a single cat from the database
-func (c Cat) GetCat(s Storage) (Cat, error) {
-	return s.Select(c.ID)
-}
-
-// CreateCat creates a new cat in the database
-func (c Cat) CreateCat(s Storage) (string, error) {
-	return s.Insert(c)
-}
-
-// UpdatesCat creates a new cat in the database
-func (c Cat) UpdateCat(s Storage) error {
-	return s.Update(c.ID, c)
-}
-
-// DeleteCat removes a cat in the database
-func (c Cat) DeleteCat(s Storage) error {
-	return s.Delete(c.ID)
-}
+//func (c Cat) GetCat(s Storage) ([]byte, error) {
+//	return s.Select(c.ID)
+//}
+//
+//// CreateCat creates a new cat in the database
+//func (c Cat) CreateCat(s Storage) (string, error) {
+//
+//	return s.Insert(c)
+//}
+//
+//// UpdatesCat creates a new cat in the database
+//func (c Cat) UpdateCat(s Storage) error {
+//	return s.Update(c.ID, c)
+//}
+//
+//// DeleteCat removes a cat in the database
+//func (c Cat) DeleteCat(s Storage) error {
+//	return s.Delete(c.ID)
+//}
+//
 
 // GetCats retreives multiple cats from the database
 // todo finish implementing this

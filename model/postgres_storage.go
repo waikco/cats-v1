@@ -3,12 +3,12 @@ package model
 import "C"
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
-
-	"github.com/waikco/cats-v1/conf"
 
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
+	"github.com/waikco/cats-v1/conf"
 )
 
 //CreateTableQuery is sql query for creating fda_data table
@@ -58,7 +58,12 @@ func BootstrapPostgres(config conf.Database) (Storage, error) {
 	return storage, nil
 }
 
-func (p *PostGres) Insert(cat Cat) (string, error) {
+func (p *PostGres) Insert(b []byte) (string, error) {
+	var cat Cat
+	if err := json.Unmarshal(b, &cat); err != nil {
+		return "", err
+	}
+
 	var id string
 	query := `INSERT INTO cats (name,color,age) VALUES ($1,$2, $3) RETURNING id`
 	err := p.database.QueryRow(query, cat.Name, cat.Color, cat.Age).Scan(&id)
@@ -69,18 +74,17 @@ func (p *PostGres) Insert(cat Cat) (string, error) {
 	return id, nil
 }
 
-func (p *PostGres) Select(id string) (Cat, error) {
-	var data Cat
+func (p *PostGres) Select(id string) ([]byte, error) {
+	var cat Cat
 	query := `SELECT name, color, age FROM cats WHERE id=$1`
-	err := p.database.QueryRow(query, id).Scan(&data.Name, &data.Color, &data.Age)
+	err := p.database.QueryRow(query, id).Scan(&cat.Name, &cat.Color, &cat.Age)
 	if err != nil {
-		return Cat{}, err
+		return nil, err
 	}
-
-	return data, nil
+	return json.Marshal(cat)
 }
 
-func (p *PostGres) SelectAll(count, start int) ([]Cat, error) {
+func (p *PostGres) SelectAll(count int, start int) ([]byte, error) {
 	rows, err := p.database.Query(`SELECT id, name, color, age FROM cats LIMIT $1 OFFSET $2`, count, start)
 	if err != nil {
 		return nil, err
@@ -100,10 +104,15 @@ func (p *PostGres) SelectAll(count, start int) ([]Cat, error) {
 	if len(cats) == 0 {
 		return nil, sql.ErrNoRows
 	}
-	return cats, nil
+	return json.Marshal(cats)
 }
 
-func (p *PostGres) Update(id string, cat Cat) error {
+func (p *PostGres) Update(id string, b []byte) error {
+	var cat Cat
+	if err := json.Unmarshal(b, &cat); err != nil {
+		return err
+	}
+
 	query := `UPDATE cats SET name=$1, color=$2, age=$3 WHERE id=$4`
 	_, err := p.database.Exec(query, cat.Name, cat.Color, cat.Age, id)
 	return err

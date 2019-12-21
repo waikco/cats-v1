@@ -19,11 +19,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/waikco/cats-v1/cmd/server"
+
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/waikco/cats-v1/app"
 	"github.com/waikco/cats-v1/conf"
 )
 
@@ -35,7 +36,7 @@ var rootCmd = &cobra.Command{
 	Short: "A sample restful API",
 	Long:  `Provides cat data through a restful API, backed by multiple storage systems`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var a app.App
+		var a server.App
 		var config conf.Config
 
 		viperInstance := viper.GetViper()
@@ -47,7 +48,6 @@ var rootCmd = &cobra.Command{
 
 		a.Bootstrap()
 		a.Run()
-
 	},
 }
 

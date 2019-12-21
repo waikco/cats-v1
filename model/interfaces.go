@@ -3,10 +3,10 @@ package model
 //Storage
 type Storage interface {
 	Status() error
-	Insert(Cat) (string, error)
-	Select(string) (Cat, error)
-	SelectAll(int, int) ([]Cat, error)
-	Update(string, Cat) error
+	Insert([]byte) (string, error)
+	Select(string) ([]byte, error)
+	SelectAll(int, int) ([]byte, error)
+	Update(string, []byte) error
 	Delete(string) error
-	Purge(string) error // deletes all items from table
+	Purge(string) error
 }
