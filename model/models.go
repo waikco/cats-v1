@@ -1,10 +1,10 @@
 package model
 
 type Cat struct {
-	ID    string `json:"id, omitempty"`
-	Name  string `json:"name, omitempty"`
-	Color string `json:"color, omitempty"`
-	Age   int    `json:"age, omitempty"`
+	ID    string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Color string `json:"color,omitempty"`
+	Age   int    `json:"age,omitempty"`
 }
 
 // GetCat retrieves a single cat from the database

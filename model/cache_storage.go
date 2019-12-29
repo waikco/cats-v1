@@ -2,7 +2,8 @@ package model
 
 import (
 	"bytes"
-	"encoding/json"
+
+	json "github.com/json-iterator/go"
 
 	"github.com/coocood/freecache"
 	"github.com/rs/zerolog/log"

@@ -3,13 +3,13 @@ package server
 import (
 	"crypto/tls"
 	"fmt"
-	conf2 "github.com/waikco/cats-v1/conf"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/waikco/cats-v1/conf"
 	"github.com/waikco/cats-v1/model"
 )
 
@@ -18,7 +18,7 @@ type App struct {
 	Server  *http.Server
 	Storage model.Storage
 	Router  http.Handler
-	Config  conf2.Config
+	Config  conf.Config
 }
 
 // Bootstrap prepares app for run by setting things up based on provided config.

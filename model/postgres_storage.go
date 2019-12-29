@@ -1,10 +1,10 @@
 package model
 
-import "C"
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
+
+	json "github.com/json-iterator/go"
 
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
