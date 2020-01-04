@@ -1,0 +1,15 @@
+---
+server:
+  port: '8080'
+  cert: certs/
+  tls: false
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: '""'
+  databaseName: postgres
+  sslMode: disable
+  sslFactory: org.postgresql.ssl.NonValidatingFactory
+logging:
+  level: debug

@@ -179,7 +179,3 @@ func (a *App) DeleteCat(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		log.Debug().Msgf("error getting cat: %v", err)
 	}
 }
-
-//func (a *App) MassCreateCat(w http.ResponseWriter, r *http.Request) {
-//	respondWithJson(w, http.StatusOK, Response{Result: "not implemented"})
-//}

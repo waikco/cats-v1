@@ -6,7 +6,7 @@ GO_TEST_DIRS := $(shell \
 	find . -name "*_test.go" -not -path "./vendor/*" | \
 	xargs -I {} dirname {}  | \
 	uniq)
-	
+
 cats-v1_BUILD_DATE_TIME=$(shell date -u "+%Y.%m.%d %H:%M:%S %Z")
 cats-v1_VERSION ?= UNSET
 cats-v1_BRANCH ?= UNSET

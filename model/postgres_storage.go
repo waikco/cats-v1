@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
+
 	json "github.com/json-iterator/go"
 
 	_ "github.com/lib/pq"
@@ -34,15 +36,16 @@ age INT NOT NULL
 );`
 
 type PostGres struct {
-	database *sql.DB
+	database *sqlx.DB
 	dbName   string
 }
 
 func BootstrapPostgres(config conf.Database) (Storage, error) {
 	// connect to database
-	dbInfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		config.User, config.Password, config.DatabaseName)
-	db, err := sql.Open("postgres", dbInfo)
+	dbInfo := fmt.Sprintf(
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		config.Host, config.Port, config.User, config.Password, config.DatabaseName)
+	db, err := sqlx.Connect("postgres", dbInfo)
 	if err != nil {
 		return nil, err
 	}
