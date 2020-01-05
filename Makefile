@@ -12,7 +12,7 @@ cats-v1_VERSION ?= UNSET
 cats-v1_BRANCH ?= UNSET
 cats-v1_COMMIT ?= UNSET
 
-format: check-gofmt test
+format: check-gofmt build test
 
 build: go-build
 
@@ -42,6 +42,10 @@ check-gofmt: $(GO_SRC_DIRS)
 	fi
 
 test: $(GO_TEST_DIRS)
+	@go test ./cmd... -race
+	@go test ./functional...
+
+test-local: $(GO_TEST_DIRS)
 	@for dir in $^; do \
 		pushd ./$$dir > /dev/null ; \
 		go test -v ; \

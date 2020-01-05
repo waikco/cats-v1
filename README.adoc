@@ -1,0 +1,18 @@
+image:https://travis-ci.org/waikco/cats-v1.svg?branch=master["Build Status", link="https://travis-ci.org/waikco/cats-v1"]
+
+= cats-v1
+
+== What is it?
+
+A sample rest API which serves as both a portfolio and web development testing ground
+
+== How is it built?
+
+The API is written in golang, and currently backed by a postgres database.
+
+== How is it tested
+
+* Unit tests using mocked dependencies.
+* Functional tests using built binary.
+* Continuously tested through a CI pipeline, currently travis CI.
+

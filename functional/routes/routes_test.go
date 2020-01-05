@@ -43,14 +43,16 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	process.Kill()
+	if process != nil {
+		_ = process.Kill()
+	}
 
 	os.Exit(code)
 
 }
 
 func purgeTable() {
-	db.Exec(`DELETE FROM cats`)
+	_, _ = db.Exec(`DELETE FROM cats`)
 }
 
 func TestEmptyTable(t *testing.T) {

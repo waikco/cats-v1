@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"time"
-
-	"github.com/rs/zerolog/log"
 )
 
 func StartBinary(config string) (*os.Process, bytes.Buffer, error) {
@@ -21,9 +18,5 @@ func StartBinary(config string) (*os.Process, bytes.Buffer, error) {
 	cmd.Stdout = &b
 	cmd.Stderr = &b
 
-	err := cmd.Start()
-	time.Sleep(time.Second * 3)
-	log.Info().Msg(string(b.Bytes()))
-
-	return cmd.Process, b, err
+	return cmd.Process, b, cmd.Start()
 }
