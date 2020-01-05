@@ -12,7 +12,7 @@ func respondWithJson(w http.ResponseWriter, code int, message interface{}) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	w.Write(response)
+	_, _ = w.Write(response)
 }
 
 type Response struct {

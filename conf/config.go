@@ -10,7 +10,7 @@ type Config struct {
 type Server struct {
 	Port string `json:"port" yaml:"port"`
 	Cert string `json:"cert" yaml:"cert"`
-	Key  string `json:"cert" yaml:"key"`
+	Key  string `json:"key" yaml:"key"`
 	TLS  bool   `json:"tls" yaml:"tls"`
 }
 

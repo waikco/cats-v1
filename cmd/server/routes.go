@@ -71,7 +71,7 @@ func (a *App) GetCat(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	case nil:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(cat)
+		_, _ = w.Write(cat)
 	case sql.ErrNoRows:
 		respondWithJson(w, http.StatusNotFound, Response{Result: "cat not found"})
 	default:
@@ -97,11 +97,11 @@ func (a *App) GetCats(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	case nil:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(all)
+		_, _ = w.Write(all)
 	case sql.ErrNoRows:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`[]`))
+		_, _ = w.Write([]byte(`[]`))
 	default:
 		respondWithJson(w, http.StatusInternalServerError, Response{
 			Error: Error{

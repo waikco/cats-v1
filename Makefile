@@ -42,7 +42,8 @@ check-gofmt: $(GO_SRC_DIRS)
 	fi
 
 test: $(GO_TEST_DIRS)
-	@go test -v ./...
+	@go test ./cmd... -race
+	@go test ./functional...
 
 test-local: $(GO_TEST_DIRS)
 	@for dir in $^; do \
